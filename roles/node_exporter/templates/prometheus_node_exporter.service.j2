@@ -1,0 +1,18 @@
+[Unit]
+Description=Prometheus Node Exporter
+
+[Service]
+Type=simple
+User={{ prometheus_system_user_name }}
+WorkingDirectory={{ prometheus_node_exporter_installation_path }}
+Restart=always
+RestartSec=1
+StandardOutput=null
+StandardError=null
+SyslogIdentifier=prometheus_node_exporter
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart={{ prometheus_node_exporter_installation_path }}/node_exporter-{{ prometheus_node_exporter_version }}.{{ prometheus_node_exporter_os }}-{{ prometheus_node_exporter_arch }}/{{ prometheus_node_exporter_binary_name }} {{ prometheus_node_exporter_extra_args | default('') }}{% for collector in prometheus_node_exporter_collector_disabled %} --no-collector.{{ collector }}{% endfor %}{% for collector in prometheus_node_exporter_collector_enabled %} --collector.{{ collector }}{% endfor %}
+
+
+[Install]
+WantedBy=multi-user.target

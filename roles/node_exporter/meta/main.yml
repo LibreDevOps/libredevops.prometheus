@@ -1,0 +1,17 @@
+galaxy_info:
+  author: Santiago Martinez (@santiagomr)
+  description: Install and configure Prometheus Node Exporter as a service
+  license: GPL-3.0-only
+  min_ansible_version: 2.12
+  platforms:
+  - name: Debian
+    versions:
+    - all
+  - name: Ubuntu
+    versions:
+    - all
+  galaxy_tags:
+  - monitoring
+  - prometheus
+  - devops
+dependencies: []

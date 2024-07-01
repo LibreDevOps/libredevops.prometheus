@@ -1,0 +1,45 @@
+---
+# tasks file
+
+- name: Create system user to run Prometheus
+  ansible.builtin.user:
+    name: "{{ prometheus_system_user_name }}"
+    create_home: yes
+    home: "{{ prometheus_node_exporter_installation_path }}"
+    shell: /usr/sbin/nologin
+    state: present
+
+- name: Is indicated binary already downloaded?
+  ansible.builtin.stat:
+    path: "{{ prometheus_node_exporter_installation_path }}/{{ prometheus_node_exporter_binary_name }}"
+  register: prometheus_node_exporter_binary_stat
+
+- name: Download indicated binary
+  ansible.builtin.unarchive:
+    remote_src: yes
+    src: "{{ prometheus_node_exporter_download_url }}"
+    dest: "{{ prometheus_node_exporter_installation_path }}"
+    owner: "{{ prometheus_system_user_name }}"
+    group: "{{ prometheus_system_user_name }}"
+    mode: 0750
+  when: not prometheus_node_exporter_binary_stat.stat.exists
+
+
+- name: Set node_exporter service configuration file
+  ansible.builtin.template:
+    src: prometheus_node_exporter.service.j2
+    dest: "/lib/systemd/system/prometheus_node_exporter.service"
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart node_exporter
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd_service:
+    daemon_reload: yes
+
+- name: Enable/disable and start/stop node_exporter service as indicated
+  ansible.builtin.systemd_service:
+    name: prometheus_node_exporter.service
+    enabled: "{{ prometheus_node_exporter_service_enabled }}"
+    state: "{{ 'started' if(prometheus_node_exporter_service_started) else 'stopped' }}"

@@ -1,0 +1,19 @@
+---
+namespace: libredevops
+name: prometheus
+version: 1.0.0
+readme: README.md
+authors:
+- Santiago Martinez (@santiagomr)
+description: collection of roles related to the Prometheus suite
+license:
+- GPL-3.0-only
+tags:
+  - monitoring
+  - prometheus
+  - devops
+repository: https://github.com/LibreDevOps/libredevops.prometheus
+documentation: https://github.com/LibreDevOps/libredevops.prometheus
+homepage: https://github.com/LibreDevOps/libredevops.prometheus
+issues: https://github.com/LibreDevOps/libredevops.prometheus/issues
+dependencies: {}
